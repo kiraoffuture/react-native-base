@@ -9,10 +9,12 @@ import {
   View,
 } from "react-native";
 
+import { ApiError } from "@/api/api-error";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
+import { useLoginMutation } from "@/queries/auth.queries";
 
 interface TouchedFields {
   email: boolean;
@@ -33,7 +35,10 @@ export default function LoginScreen() {
     email: false,
     password: false,
   });
-  const [submitting, setSubmitting] = useState(false);
+  const loginMutation = useLoginMutation();
+
+  const submitError =
+    loginMutation.error instanceof ApiError ? loginMutation.error.message : "";
 
   const emailError = useMemo(() => {
     if (!touched.email) return "";
@@ -54,20 +59,20 @@ export default function LoginScreen() {
     !passwordError &&
     email.trim() &&
     password.length >= 6 &&
-    !submitting;
+    !loginMutation.isPending;
 
   async function onSubmit() {
     setTouched({ email: true, password: true });
     if (!canSubmit) return;
 
-    setSubmitting(true);
-    try {
-      // Demo: simulate an API call
-      await new Promise((r) => setTimeout(r, 600));
-      router.replace("/(tabs)");
-    } finally {
-      setSubmitting(false);
-    }
+    loginMutation.mutate(
+      { email: email.trim(), password },
+      {
+        onSuccess: () => {
+          router.replace("/(tabs)");
+        },
+      },
+    );
   }
 
   return (
@@ -102,12 +107,14 @@ export default function LoginScreen() {
                 styles.input,
                 {
                   color: colors.text,
-                  borderColor: emailError ? "#ff4d4f" : colors.tabIconDefault,
+                  borderColor: emailError
+                    ? colors.error
+                    : colors.tabIconDefault,
                 },
               ]}
             />
             {!!emailError && (
-              <ThemedText style={[styles.error, { color: "#ff4d4f" }]}>
+              <ThemedText style={[styles.error, { color: colors.error }]}>
                 {emailError}
               </ThemedText>
             )}
@@ -129,17 +136,29 @@ export default function LoginScreen() {
                 {
                   color: colors.text,
                   borderColor: passwordError
-                    ? "#ff4d4f"
+                    ? colors.error
                     : colors.tabIconDefault,
                 },
               ]}
             />
             {!!passwordError && (
-              <ThemedText style={[styles.error, { color: "#ff4d4f" }]}>
+              <ThemedText style={[styles.error, { color: colors.error }]}>
                 {passwordError}
               </ThemedText>
             )}
           </View>
+
+          {!!submitError && (
+            <ThemedText
+              style={[
+                styles.error,
+                styles.submitError,
+                { color: colors.error },
+              ]}
+            >
+              {submitError}
+            </ThemedText>
+          )}
 
           <Pressable
             accessibilityRole="button"
@@ -154,7 +173,7 @@ export default function LoginScreen() {
             ]}
           >
             <ThemedText type="defaultSemiBold" style={styles.buttonText}>
-              {submitting ? "Signing in…" : "Sign in"}
+              {loginMutation.isPending ? "Signing in…" : "Sign in"}
             </ThemedText>
           </Pressable>
 
@@ -199,6 +218,10 @@ const styles = StyleSheet.create({
   error: {
     fontSize: 13,
     lineHeight: 18,
+    textAlign: "center",
+  },
+  submitError: {
+    marginTop: 4,
   },
   button: {
     marginTop: 8,
