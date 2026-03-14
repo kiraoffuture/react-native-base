@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 import React from "react";
-import { Pressable, StyleSheet } from "react-native";
+import { Pressable } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
@@ -15,32 +15,16 @@ export default function HomeScreen() {
   }
 
   return (
-    <ThemedView style={styles.container}>
+    <ThemedView className="flex-1 items-center justify-center px-5">
       <ThemedText type="title">Home</ThemedText>
-      <Pressable style={styles.logoutButton} onPress={onLogout}>
-        <ThemedText type="defaultSemiBold" style={styles.logoutText}>
+      <Pressable
+        className="mt-6 rounded-xl bg-red-500 px-5 py-2.5"
+        onPress={onLogout}
+      >
+        <ThemedText type="defaultSemiBold" className="text-white">
           Logout
         </ThemedText>
       </Pressable>
     </ThemedView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
-  },
-  logoutButton: {
-    marginTop: 24,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 12,
-    backgroundColor: "#ff4d4f",
-  },
-  logoutText: {
-    color: "#fff",
-  },
-});

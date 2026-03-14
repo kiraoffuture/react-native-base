@@ -6,7 +6,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
-  StyleSheet,
   TextInput,
   View,
 } from "react-native";
@@ -70,22 +69,22 @@ export default function LoginScreen() {
   }
 
   return (
-    <ThemedView style={styles.screen}>
+    <ThemedView className="flex-1 px-5">
       <KeyboardAvoidingView
         behavior={Platform.select({ ios: "padding", android: undefined })}
-        style={styles.keyboard}
+        className="flex-1 justify-center"
       >
-        <View style={styles.header}>
-          <ThemedText type="title" style={styles.title}>
+        <View className="mb-4 gap-2">
+          <ThemedText type="title" className="leading-9">
             Sign in
           </ThemedText>
-          <ThemedText style={{ color: colors.icon }}>
+          <ThemedText className="text-sm" style={{ color: colors.icon }}>
             Enter your email and password to continue.
           </ThemedText>
         </View>
 
-        <View style={styles.form}>
-          <View style={styles.field}>
+        <View className="gap-3.5">
+          <View className="gap-2">
             <ThemedText type="defaultSemiBold">Email</ThemedText>
             <Controller
               control={control}
@@ -102,26 +101,27 @@ export default function LoginScreen() {
                   autoCorrect={false}
                   returnKeyType="next"
                   onSubmitEditing={() => passwordInputRef.current?.focus()}
-                  style={[
-                    styles.input,
-                    {
-                      color: colors.text,
-                      borderColor: errors.email
-                        ? colors.error
-                        : colors.tabIconDefault,
-                    },
-                  ]}
+                  className="rounded-xl border px-3.5 py-4"
+                  style={{
+                    color: colors.text,
+                    borderColor: errors.email
+                      ? colors.error
+                      : colors.tabIconDefault,
+                  }}
                 />
               )}
             />
             {!!errors.email && (
-              <ThemedText style={[styles.error, { color: colors.error }]}>
+              <ThemedText
+                className="text-xs leading-4"
+                style={{ color: colors.error }}
+              >
                 {errors.email.message}
               </ThemedText>
             )}
           </View>
 
-          <View style={styles.field}>
+          <View className="gap-2">
             <ThemedText type="defaultSemiBold">Password</ThemedText>
             <Controller
               control={control}
@@ -137,20 +137,21 @@ export default function LoginScreen() {
                   secureTextEntry
                   returnKeyType="done"
                   onSubmitEditing={handleSubmit(onSubmit)}
-                  style={[
-                    styles.input,
-                    {
-                      color: colors.text,
-                      borderColor: errors.password
-                        ? colors.error
-                        : colors.tabIconDefault,
-                    },
-                  ]}
+                  className="rounded-xl border px-3.5 py-4"
+                  style={{
+                    color: colors.text,
+                    borderColor: errors.password
+                      ? colors.error
+                      : colors.tabIconDefault,
+                  }}
                 />
               )}
             />
             {!!errors.password && (
-              <ThemedText style={[styles.error, { color: colors.error }]}>
+              <ThemedText
+                className="text-xs leading-4"
+                style={{ color: colors.error }}
+              >
                 {errors.password.message}
               </ThemedText>
             )}
@@ -158,94 +159,40 @@ export default function LoginScreen() {
 
           {!!submitError && (
             <ThemedText
-              style={[
-                styles.error,
-                styles.submitError,
-                { color: colors.error },
-              ]}
+              className="mt-1 text-center text-xs leading-4"
+              style={{ color: colors.error }}
             >
               {submitError}
             </ThemedText>
           )}
 
-          <Pressable
-            accessibilityRole="button"
-            onPress={handleSubmit(onSubmit)}
-            disabled={!canSubmit}
-            style={({ pressed }) => [
-              styles.button,
-              {
-                backgroundColor: colors.tint,
-                opacity: !canSubmit ? 0.5 : pressed ? 0.8 : 1,
-              },
-            ]}
+          <View
+            className="mt-2 overflow-hidden rounded-xl"
+            style={{
+              backgroundColor: colors.tint,
+              opacity: !canSubmit ? 0.5 : 1,
+            }}
           >
-            <ThemedText type="defaultSemiBold" style={styles.buttonText}>
-              {loginMutation.isPending || isSubmitting
-                ? "Signing in…"
-                : "Sign in"}
-            </ThemedText>
-          </Pressable>
-
-          <Pressable onPress={() => router.back()} style={styles.secondary}>
-            <ThemedText type="link">Back</ThemedText>
-          </Pressable>
+            <Pressable
+              accessibilityRole="button"
+              onPress={handleSubmit(onSubmit)}
+              disabled={!canSubmit}
+              className="py-3.5 items-center justify-center"
+            >
+              <ThemedText
+                type="defaultSemiBold"
+                className="text-base leading-5 text-white"
+                lightColor="white"
+                darkColor="white"
+              >
+                {loginMutation.isPending || isSubmitting
+                  ? "Signing in…"
+                  : "Sign in"}
+              </ThemedText>
+            </Pressable>
+          </View>
         </View>
       </KeyboardAvoidingView>
     </ThemedView>
   );
 }
-
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    padding: 20,
-  },
-  keyboard: {
-    flex: 1,
-    justifyContent: "center",
-  },
-  header: {
-    gap: 10,
-    marginBottom: 18,
-  },
-  title: {
-    lineHeight: 36,
-  },
-  form: {
-    gap: 14,
-  },
-  field: {
-    gap: 8,
-  },
-  input: {
-    borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    fontSize: 16,
-  },
-  error: {
-    fontSize: 13,
-    lineHeight: 18,
-  },
-  submitError: {
-    marginTop: 4,
-  },
-  button: {
-    marginTop: 8,
-    borderRadius: 12,
-    paddingVertical: 14,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    lineHeight: 20,
-  },
-  secondary: {
-    paddingVertical: 10,
-    alignItems: "center",
-  },
-});
