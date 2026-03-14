@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -35,6 +35,7 @@ export default function LoginScreen() {
     email: false,
     password: false,
   });
+  const passwordInputRef = useRef<TextInput | null>(null);
   const loginMutation = useLoginMutation();
 
   const submitError =
@@ -103,6 +104,7 @@ export default function LoginScreen() {
               autoCapitalize="none"
               autoCorrect={false}
               returnKeyType="next"
+              onSubmitEditing={() => passwordInputRef.current?.focus()}
               style={[
                 styles.input,
                 {
@@ -123,6 +125,7 @@ export default function LoginScreen() {
           <View style={styles.field}>
             <ThemedText type="defaultSemiBold">Password</ThemedText>
             <TextInput
+              ref={passwordInputRef}
               value={password}
               onChangeText={setPassword}
               onBlur={() => setTouched((t) => ({ ...t, password: true }))}
