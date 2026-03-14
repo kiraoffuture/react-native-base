@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
 import React, { useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -18,23 +19,24 @@ import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useLoginMutation } from "@/queries/auth.queries";
 import { z } from "zod";
 
-const loginSchema = z.object({
-  email: z
-    .string()
-    .trim()
-    .nonempty("Please enter your email")
-    .email("Invalid email address"),
-  password: z
-    .string()
-    .nonempty("Please enter your password")
-    .min(6, "Password must be at least 6 characters"),
-});
-
-type LoginFormValues = z.infer<typeof loginSchema>;
-
 export default function LoginScreen() {
   const colorScheme = useColorScheme() ?? "light";
   const colors = Colors[colorScheme];
+  const { t } = useTranslation();
+
+  const loginSchema = z.object({
+    email: z
+      .string()
+      .trim()
+      .nonempty(t("auth.validation.emailRequired"))
+      .email(t("auth.validation.emailInvalid")),
+    password: z
+      .string()
+      .nonempty(t("auth.validation.passwordRequired"))
+      .min(6, t("auth.validation.passwordMin")),
+  });
+
+  type LoginFormValues = z.infer<typeof loginSchema>;
 
   const passwordInputRef = useRef<TextInput | null>(null);
   const loginMutation = useLoginMutation();
@@ -76,16 +78,18 @@ export default function LoginScreen() {
       >
         <View className="mb-4 gap-2">
           <ThemedText type="title" className="leading-9">
-            Sign in
+            {t("auth.signIn.title")}
           </ThemedText>
           <ThemedText className="text-sm" style={{ color: colors.icon }}>
-            Enter your email and password to continue.
+            {t("auth.signIn.subtitle")}
           </ThemedText>
         </View>
 
         <View className="gap-3.5">
           <View className="gap-2">
-            <ThemedText type="defaultSemiBold">Email</ThemedText>
+            <ThemedText type="defaultSemiBold">
+              {t("auth.signIn.emailLabel")}
+            </ThemedText>
             <Controller
               control={control}
               name="email"
@@ -94,7 +98,7 @@ export default function LoginScreen() {
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
-                  placeholder="you@example.com"
+                  placeholder={t("auth.signIn.emailPlaceholder")}
                   placeholderTextColor={colors.icon}
                   keyboardType="email-address"
                   autoCapitalize="none"
@@ -122,7 +126,9 @@ export default function LoginScreen() {
           </View>
 
           <View className="gap-2">
-            <ThemedText type="defaultSemiBold">Password</ThemedText>
+            <ThemedText type="defaultSemiBold">
+              {t("auth.signIn.passwordLabel")}
+            </ThemedText>
             <Controller
               control={control}
               name="password"
@@ -132,7 +138,7 @@ export default function LoginScreen() {
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
-                  placeholder="••••••"
+                  placeholder={t("auth.signIn.passwordPlaceholder")}
                   placeholderTextColor={colors.icon}
                   secureTextEntry
                   returnKeyType="done"
@@ -186,8 +192,8 @@ export default function LoginScreen() {
                 darkColor="white"
               >
                 {loginMutation.isPending || isSubmitting
-                  ? "Signing in…"
-                  : "Sign in"}
+                  ? t("auth.signIn.submitting")
+                  : t("auth.signIn.submit")}
               </ThemedText>
             </Pressable>
           </View>

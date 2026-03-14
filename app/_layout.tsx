@@ -11,6 +11,7 @@ import "react-native-reanimated";
 import "../global.css";
 
 import { useColorScheme } from "@/hooks/use-color-scheme";
+import "@/i18n";
 
 export const unstable_settings = {
   anchor: "(auth)",
@@ -26,10 +27,7 @@ export default function RootLayout() {
         <Stack>
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="modal"
-            options={{ presentation: "modal", title: "Modal" }}
-          />
+          <Stack.Screen name="modal" options={{ presentation: "modal" }} />
         </Stack>
         <StatusBar style="auto" />
       </ThemeProvider>
