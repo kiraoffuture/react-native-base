@@ -7,7 +7,7 @@ import { ThemedView } from "@/components/themed-view";
 import { useAuthStore } from "@/stores/auth.store";
 
 export default function HomeScreen() {
-  const clear = useAuthStore((store) => store.clear);
+  const { clear } = useAuthStore();
 
   function onLogout() {
     clear();

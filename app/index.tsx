@@ -5,7 +5,7 @@ import { ActivityIndicator, View } from "react-native";
 import { useAuthStore } from "@/stores/auth.store";
 
 export default function Index() {
-  const token = useAuthStore((store) => store.token);
+  const { token } = useAuthStore();
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
