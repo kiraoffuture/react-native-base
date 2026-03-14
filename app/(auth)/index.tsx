@@ -1,5 +1,7 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
-import React, { useMemo, useRef, useState } from "react";
+import React, { useRef } from "react";
+import { Controller, useForm } from "react-hook-form";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -15,59 +17,50 @@ import { ThemedView } from "@/components/themed-view";
 import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useLoginMutation } from "@/queries/auth.queries";
+import { z } from "zod";
 
-interface TouchedFields {
-  email: boolean;
-  password: boolean;
-}
+const loginSchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .nonempty("Please enter your email")
+    .email("Invalid email address"),
+  password: z
+    .string()
+    .nonempty("Please enter your password")
+    .min(6, "Password must be at least 6 characters"),
+});
 
-function isValidEmail(value: string) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
-}
+type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginScreen() {
   const colorScheme = useColorScheme() ?? "light";
   const colors = Colors[colorScheme];
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [touched, setTouched] = useState<TouchedFields>({
-    email: false,
-    password: false,
-  });
   const passwordInputRef = useRef<TextInput | null>(null);
   const loginMutation = useLoginMutation();
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting, isValid },
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    mode: "onChange",
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
   const submitError =
     loginMutation.error instanceof ApiError ? loginMutation.error.message : "";
 
-  const emailError = useMemo(() => {
-    if (!touched.email) return "";
-    if (!email.trim()) return "Please enter your email";
-    if (!isValidEmail(email)) return "Invalid email address";
-    return "";
-  }, [email, touched.email]);
+  const canSubmit = !loginMutation.isPending && !isSubmitting && isValid;
 
-  const passwordError = useMemo(() => {
-    if (!touched.password) return "";
-    if (!password) return "Please enter your password";
-    if (password.length < 6) return "Password must be at least 6 characters";
-    return "";
-  }, [password, touched.password]);
-
-  const canSubmit =
-    !emailError &&
-    !passwordError &&
-    email.trim() &&
-    password.length >= 6 &&
-    !loginMutation.isPending;
-
-  async function onSubmit() {
-    setTouched({ email: true, password: true });
-    if (!canSubmit) return;
-
+  function onSubmit(values: LoginFormValues) {
     loginMutation.mutate(
-      { email: email.trim(), password },
+      { email: values.email.trim(), password: values.password },
       {
         onSuccess: () => {
           router.replace("/(tabs)");
@@ -94,59 +87,71 @@ export default function LoginScreen() {
         <View style={styles.form}>
           <View style={styles.field}>
             <ThemedText type="defaultSemiBold">Email</ThemedText>
-            <TextInput
-              value={email}
-              onChangeText={setEmail}
-              onBlur={() => setTouched((t) => ({ ...t, email: true }))}
-              placeholder="you@example.com"
-              placeholderTextColor={colors.icon}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoCorrect={false}
-              returnKeyType="next"
-              onSubmitEditing={() => passwordInputRef.current?.focus()}
-              style={[
-                styles.input,
-                {
-                  color: colors.text,
-                  borderColor: emailError
-                    ? colors.error
-                    : colors.tabIconDefault,
-                },
-              ]}
+            <Controller
+              control={control}
+              name="email"
+              render={({ field: { value, onChange, onBlur } }) => (
+                <TextInput
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  placeholder="you@example.com"
+                  placeholderTextColor={colors.icon}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  returnKeyType="next"
+                  onSubmitEditing={() => passwordInputRef.current?.focus()}
+                  style={[
+                    styles.input,
+                    {
+                      color: colors.text,
+                      borderColor: errors.email
+                        ? colors.error
+                        : colors.tabIconDefault,
+                    },
+                  ]}
+                />
+              )}
             />
-            {!!emailError && (
+            {!!errors.email && (
               <ThemedText style={[styles.error, { color: colors.error }]}>
-                {emailError}
+                {errors.email.message}
               </ThemedText>
             )}
           </View>
 
           <View style={styles.field}>
             <ThemedText type="defaultSemiBold">Password</ThemedText>
-            <TextInput
-              ref={passwordInputRef}
-              value={password}
-              onChangeText={setPassword}
-              onBlur={() => setTouched((t) => ({ ...t, password: true }))}
-              placeholder="••••••"
-              placeholderTextColor={colors.icon}
-              secureTextEntry
-              returnKeyType="done"
-              onSubmitEditing={onSubmit}
-              style={[
-                styles.input,
-                {
-                  color: colors.text,
-                  borderColor: passwordError
-                    ? colors.error
-                    : colors.tabIconDefault,
-                },
-              ]}
+            <Controller
+              control={control}
+              name="password"
+              render={({ field: { value, onChange, onBlur } }) => (
+                <TextInput
+                  ref={passwordInputRef}
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  placeholder="••••••"
+                  placeholderTextColor={colors.icon}
+                  secureTextEntry
+                  returnKeyType="done"
+                  onSubmitEditing={handleSubmit(onSubmit)}
+                  style={[
+                    styles.input,
+                    {
+                      color: colors.text,
+                      borderColor: errors.password
+                        ? colors.error
+                        : colors.tabIconDefault,
+                    },
+                  ]}
+                />
+              )}
             />
-            {!!passwordError && (
+            {!!errors.password && (
               <ThemedText style={[styles.error, { color: colors.error }]}>
-                {passwordError}
+                {errors.password.message}
               </ThemedText>
             )}
           </View>
@@ -165,7 +170,7 @@ export default function LoginScreen() {
 
           <Pressable
             accessibilityRole="button"
-            onPress={onSubmit}
+            onPress={handleSubmit(onSubmit)}
             disabled={!canSubmit}
             style={({ pressed }) => [
               styles.button,
@@ -176,7 +181,9 @@ export default function LoginScreen() {
             ]}
           >
             <ThemedText type="defaultSemiBold" style={styles.buttonText}>
-              {loginMutation.isPending ? "Signing in…" : "Sign in"}
+              {loginMutation.isPending || isSubmitting
+                ? "Signing in…"
+                : "Sign in"}
             </ThemedText>
           </Pressable>
 
@@ -221,7 +228,6 @@ const styles = StyleSheet.create({
   error: {
     fontSize: 13,
     lineHeight: 18,
-    textAlign: "center",
   },
   submitError: {
     marginTop: 4,
