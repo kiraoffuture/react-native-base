@@ -24,7 +24,8 @@
   "home": {
     "title": "Home",
     "logout": "Logout",
-    "testSentry": "Test Sentry"
+    "testSentry": "Test Sentry",
+    "testSentryToast": "Test error sent to Sentry"
   },
   "explore": {
     "title": "Explore"

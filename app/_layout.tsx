@@ -9,6 +9,8 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 import "../global.css";
 
 import "@/bootstrap";
@@ -23,6 +25,7 @@ export const unstable_settings = {
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [queryClient] = useState(() => new QueryClient());
+  const insets = useSafeAreaInsets();
 
   return (
     <Sentry.ErrorBoundary fallback={<ErrorFallback />}>
@@ -36,6 +39,7 @@ export default function RootLayout() {
           <StatusBar style="auto" />
         </ThemeProvider>
       </QueryClientProvider>
+      <Toast topOffset={insets.top} />
     </Sentry.ErrorBoundary>
   );
 }

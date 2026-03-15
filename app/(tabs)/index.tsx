@@ -2,6 +2,7 @@ import { router } from "expo-router";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable } from "react-native";
+import Toast from "react-native-toast-message";
 
 import { Sentry } from "@/bootstrap/sentry";
 import { ThemedText } from "@/components/themed-text";
@@ -18,7 +19,11 @@ export default function HomeScreen() {
   }
 
   function onTestSentry() {
-    Sentry.captureException(new Error('First error'));
+    Sentry.captureException(new Error("First error"));
+    Toast.show({
+      type: "success",
+      text1: t("home.testSentryToast"),
+    });
   }
 
   return (

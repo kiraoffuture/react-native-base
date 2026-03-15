@@ -24,7 +24,8 @@
   "home": {
     "title": "Trang chủ",
     "logout": "Đăng xuất",
-    "testSentry": "Thử Sentry"
+    "testSentry": "Thử Sentry",
+    "testSentryToast": "Đã gửi lỗi thử nghiệm lên Sentry"
   },
   "explore": {
     "title": "Khám phá"
