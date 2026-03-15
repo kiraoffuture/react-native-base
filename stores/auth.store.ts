@@ -6,7 +6,7 @@ import { zustandStorage } from "./persist.storage";
 interface AuthState {
   token: string | null;
   setToken: (token: string | null) => void;
-  clear: () => void;
+  clearAuth: () => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -14,7 +14,7 @@ export const useAuthStore = create<AuthState>()(
     (set) => ({
       token: null,
       setToken: (token) => set({ token }),
-      clear: () => set({ token: null }),
+      clearAuth: () => set({ token: null }),
     }),
     {
       name: "auth",

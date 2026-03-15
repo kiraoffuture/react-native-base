@@ -1,19 +1,24 @@
 import { router } from "expo-router";
 import React from "react";
-import { Pressable } from "react-native";
 import { useTranslation } from "react-i18next";
+import { Pressable } from "react-native";
 
+import { Sentry } from "@/bootstrap/sentry";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { useAuthStore } from "@/stores/auth.store";
 
 export default function HomeScreen() {
-  const { clear } = useAuthStore();
+  const { clearAuth } = useAuthStore();
   const { t } = useTranslation();
 
   function onLogout() {
-    clear();
+    clearAuth();
     router.replace("/(auth)");
+  }
+
+  function onTestSentry() {
+    Sentry.captureException(new Error('First error'));
   }
 
   return (
@@ -25,6 +30,14 @@ export default function HomeScreen() {
       >
         <ThemedText type="defaultSemiBold" className="text-white">
           {t("home.logout")}
+        </ThemedText>
+      </Pressable>
+      <Pressable
+        className="mt-6 rounded-xl bg-red-500 px-5 py-2.5"
+        onPress={onTestSentry}
+      >
+        <ThemedText type="defaultSemiBold" className="text-white">
+          {t("home.testSentry")}
         </ThemedText>
       </Pressable>
     </ThemedView>
