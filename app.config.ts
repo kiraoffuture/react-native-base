@@ -20,6 +20,7 @@ if (!fs.existsSync(envPath)) {
 const appName = process.env.APP_NAME || "react-native-base";
 const appId = process.env.APP_ID || "com.kira.reactnativebase";
 const serverUrl = process.env.SERVER_URL ?? "";
+const serverDomain = process.env.SERVER_DOMAIN ?? "";
 const appVersion = process.env.APP_VERSION || "1.0.0";
 const buildNumber = process.env.APP_BUILD_NUMBER || "1";
 
@@ -90,6 +91,13 @@ const config: ExpoConfig = {
       "./plugins/withAndroidAppName",
       {
         appName,
+      },
+    ],
+    [
+      "./plugins/withAndroidNetworkSecurity",
+      {
+        domain: serverDomain,
+        certResourceName: "gandicert",
       },
     ],
   ],
