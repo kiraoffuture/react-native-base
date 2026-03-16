@@ -1,17 +1,24 @@
 import { router } from "expo-router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable } from "react-native";
+import { Pressable, View } from "react-native";
 import Toast from "react-native-toast-message";
 
 import { Sentry } from "@/bootstrap/sentry";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useAuthStore } from "@/stores/auth.store";
 
 export default function HomeScreen() {
   const { clearAuth } = useAuthStore();
   const { t } = useTranslation();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const id = setTimeout(() => setLoading(false), 5000);
+    return () => clearTimeout(id);
+  }, []);
 
   function onLogout() {
     clearAuth();
@@ -28,23 +35,34 @@ export default function HomeScreen() {
 
   return (
     <ThemedView className="flex-1 items-center justify-center px-5">
-      <ThemedText type="title">{t("home.title")}</ThemedText>
-      <Pressable
-        className="mt-6 rounded-xl bg-red-500 px-5 py-2.5"
-        onPress={onLogout}
-      >
-        <ThemedText type="defaultSemiBold" className="text-white">
-          {t("home.logout")}
-        </ThemedText>
-      </Pressable>
-      <Pressable
-        className="mt-6 rounded-xl bg-red-500 px-5 py-2.5"
-        onPress={onTestSentry}
-      >
-        <ThemedText type="defaultSemiBold" className="text-white">
-          {t("home.testSentry")}
-        </ThemedText>
-      </Pressable>
+      {loading ? (
+        <View className="w-full max-w-md gap-3">
+          <Skeleton height={24} radius={12} />
+          <Skeleton height={14} width="75%" />
+          <Skeleton height={14} width="90%" />
+          <Skeleton height={14} width="60%" />
+        </View>
+      ) : (
+        <>
+          <ThemedText type="title">{t("home.title")}</ThemedText>
+          <Pressable
+            className="mt-6 rounded-xl bg-red-500 px-5 py-2.5"
+            onPress={onLogout}
+          >
+            <ThemedText type="defaultSemiBold" className="text-white">
+              {t("home.logout")}
+            </ThemedText>
+          </Pressable>
+          <Pressable
+            className="mt-6 rounded-xl bg-red-500 px-5 py-2.5"
+            onPress={onTestSentry}
+          >
+            <ThemedText type="defaultSemiBold" className="text-white">
+              {t("home.testSentry")}
+            </ThemedText>
+          </Pressable>
+        </>
+      )}
     </ThemedView>
   );
 }
