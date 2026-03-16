@@ -1,7 +1,9 @@
 import axios from "axios";
 
+import ENV from "@/config/env";
+
 export const apiClient = axios.create({
-  baseURL: "https://demo5771170.mockable.io",
+  baseURL: ENV.SERVER_URL,
   headers: {
     "Content-Type": "application/json",
   },
