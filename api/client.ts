@@ -1,5 +1,6 @@
 import axios from "axios";
 
+import { attachApiLogger } from "@/api/api-logger";
 import ENV from "@/config/env";
 
 export const apiClient = axios.create({
@@ -9,3 +10,5 @@ export const apiClient = axios.create({
   },
   timeout: 20000,
 });
+
+attachApiLogger(apiClient);
