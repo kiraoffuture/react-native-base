@@ -9,6 +9,7 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuthStore } from "@/stores/auth.store";
+import { crash, getCrashlytics, log } from "@react-native-firebase/crashlytics";
 
 export default function HomeScreen() {
   const { clearAuth } = useAuthStore();
@@ -30,6 +31,16 @@ export default function HomeScreen() {
     Toast.show({
       type: "success",
       text1: t("home.testSentryToast"),
+    });
+  }
+
+  function onTestCrashlytics() {
+    const crashlytics = getCrashlytics();
+    log(crashlytics, "Test crash from home screen button");
+    crash(crashlytics);
+    Toast.show({
+      type: "success",
+      text1: t("home.testCrashlyticsToast"),
     });
   }
 
@@ -59,6 +70,14 @@ export default function HomeScreen() {
           >
             <ThemedText type="defaultSemiBold" className="text-white">
               {t("home.testSentry")}
+            </ThemedText>
+          </Pressable>
+          <Pressable
+            className="mt-6 rounded-xl bg-red-500 px-5 py-2.5"
+            onPress={onTestCrashlytics}
+          >
+            <ThemedText type="defaultSemiBold" className="text-white">
+              {t("home.testCrashlytics")}
             </ThemedText>
           </Pressable>
         </>

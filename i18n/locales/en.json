@@ -25,7 +25,10 @@
     "title": "Home",
     "logout": "Logout",
     "testSentry": "Test Sentry",
-    "testSentryToast": "Test error sent to Sentry"
+    "testSentryToast": "Test error sent to Sentry",
+    "testCrashlytics": "Test Crashlytics",
+    "testCrashlyticsWebToast": "Crashlytics is not available on web.",
+    "testCrashlyticsToast": "Test error sent to Crashlytics"
   },
   "explore": {
     "title": "Explore"

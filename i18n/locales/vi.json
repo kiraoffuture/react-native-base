@@ -25,7 +25,10 @@
     "title": "Trang chủ",
     "logout": "Đăng xuất",
     "testSentry": "Thử Sentry",
-    "testSentryToast": "Đã gửi lỗi thử nghiệm lên Sentry"
+    "testSentryToast": "Đã gửi lỗi thử nghiệm lên Sentry",
+    "testCrashlytics": "Thử Crashlytics",
+    "testCrashlyticsWebToast": "Crashlytics không khả dụng trên web.",
+    "testCrashlyticsToast": "Đã gửi lỗi thử nghiệm lên Crashlytics"
   },
   "explore": {
     "title": "Khám phá"

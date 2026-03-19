@@ -37,6 +37,7 @@ const config: ExpoConfig = {
     supportsTablet: true,
     bundleIdentifier: appId,
     buildNumber,
+    googleServicesFile: `./config/firebase/${envName}/GoogleService-Info.plist`,
     infoPlist: {
       CFBundleDisplayName: appName,
     },
@@ -44,6 +45,7 @@ const config: ExpoConfig = {
   android: {
     package: appId,
     versionCode: parseInt(buildNumber, 10),
+    googleServicesFile: `./config/firebase/${envName}/google-services.json`,
     adaptiveIcon: {
       backgroundColor: "#E6F4FE",
       foregroundImage: "./assets/images/android-icon-foreground.png",
@@ -60,6 +62,17 @@ const config: ExpoConfig = {
   },
   plugins: [
     "expo-router",
+    "@react-native-firebase/app",
+    "@react-native-firebase/crashlytics",
+    [
+      "expo-build-properties",
+      {
+        ios: {
+          useFrameworks: "static",
+          forceStaticLinking: ["RNFBApp", "RNFBCrashlytics", "RNFBAnalytics"],
+        },
+      },
+    ],
     [
       "expo-splash-screen",
       {
