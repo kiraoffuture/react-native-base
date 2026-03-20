@@ -1,8 +1,8 @@
 import { Redirect } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, View } from "react-native";
 
 import { useAuthStore } from "@/stores/auth.store";
+import { Loading } from "@/components/ui/loading";
 
 export default function Index() {
   const { token } = useAuthStore();
@@ -23,9 +23,7 @@ export default function Index() {
 
   if (!hydrated) {
     return (
-      <View className="flex-1 items-center justify-center">
-        <ActivityIndicator />
-      </View>
+      <Loading fullScreen />
     );
   }
 
