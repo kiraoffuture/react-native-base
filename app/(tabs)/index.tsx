@@ -2,6 +2,7 @@ import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable, View } from "react-native";
+import { Image } from "expo-image";
 import Toast from "react-native-toast-message";
 
 import { Sentry } from "@/bootstrap/sentry";
@@ -48,6 +49,7 @@ export default function HomeScreen() {
     <ThemedView className="flex-1 items-center justify-center px-5">
       {loading ? (
         <View className="w-full max-w-md gap-3">
+          <Skeleton height={180} radius={16} />
           <Skeleton height={24} radius={12} />
           <Skeleton height={14} width="75%" />
           <Skeleton height={14} width="90%" />
@@ -56,6 +58,14 @@ export default function HomeScreen() {
       ) : (
         <>
           <ThemedText type="title">{t("home.title")}</ThemedText>
+          <Image
+            source={{
+              uri: "https://thumbs.dreamstime.com/b/sample-jpeg-fluffy-white-pomeranian-puppy-sits-looks-camera-colorful-balls-front-364720569.jpg?w=992",
+            }}
+            style={{ width: "100%", height: 180, borderRadius: 16, marginTop: 12 }}
+            contentFit="cover"
+            transition={300}
+          />
           <Pressable
             className="mt-6 rounded-xl bg-red-500 px-5 py-2.5"
             onPress={onLogout}
