@@ -15,4 +15,3 @@ Place your Firebase config files here (never commit them):
   - `config/firebase/product/GoogleService-Info.plist`
 
 `app.config.ts` automatically picks the right files based on `APP_ENV`.
-

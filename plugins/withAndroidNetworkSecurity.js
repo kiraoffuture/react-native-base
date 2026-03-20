@@ -49,7 +49,11 @@ const withAndroidNetworkSecurity = (config, { domain, certResourceName }) => {
 
       const rawDir = path.join(androidMainRes, "raw");
       const rawCertPath = path.join(rawDir, `${certResourceName}.pem`);
-      const sourceCertPath = path.join(projectRoot, "certs", `${certResourceName}.pem`);
+      const sourceCertPath = path.join(
+        projectRoot,
+        "certs",
+        `${certResourceName}.pem`,
+      );
 
       if (!fs.existsSync(xmlDir)) {
         fs.mkdirSync(xmlDir, { recursive: true });
