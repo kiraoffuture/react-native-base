@@ -1,0 +1,21 @@
+---
+description: Comments and documentation must be written in English. Use when the agent adds or modifies code comments, docstrings, or markdown documentation.
+globs: **/*.{ts,tsx,js,jsx,md,mdx}
+alwaysApply: true
+---
+
+# English Comments & Docs Rule
+
+## Requirements
+- Write all code comments in English.
+- Write all documentation (README/markdown, SKILL/RULE text, docstrings) in English.
+- Avoid adding new Vietnamese (or any non-English) text in comments/docs.
+
+## Examples
+- Bad:
+  - `// thêm skeleton vào component`
+  - `/* đây là ghi chú */`
+- Good:
+  - `// Add skeleton to the component`
+  - `/* This is a note */`
+

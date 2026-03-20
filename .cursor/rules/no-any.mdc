@@ -1,0 +1,20 @@
+---
+description: Do not use TypeScript `any` or `as any`. Prefer `unknown` and proper typing.
+globs: **/*.{ts,tsx,js,jsx}
+alwaysApply: true
+---
+
+# No `any` Rule
+
+## Requirements
+- Do not introduce the `any` type in new code.
+- Do not use `as any` type assertions in new code.
+- Prefer `unknown`, generics, and explicit types. Narrow `unknown` via type guards before use.
+
+## Common replacements
+- `catch (e)` in TS is typically `unknown` (or treat it as unknown) and narrow before reading fields.
+- For Axios/Promise results, prefer typed generics like `request<T>(...)` instead of `any`.
+
+## Exceptions
+- If a file already contains `any` from earlier work, keep it as-is unless the task explicitly asks to refactor/remove it.
+

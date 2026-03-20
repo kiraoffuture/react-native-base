@@ -1,0 +1,26 @@
+---
+description: Prefer Tailwind/Nativewind `className` styling over React Native `style` when writing components. Use when the task adds or modifies UI components.
+globs: **/*.{ts,tsx}
+alwaysApply: true
+---
+
+# Tailwind/Nativewind Preference
+
+## Core requirement
+- When writing or editing UI components in this repo, prefer `className` (Tailwind/Nativewind via `nativewind`) over using raw React Native `style` props or `StyleSheet`.
+
+## Allowed exceptions
+- Use `style` when the style values are genuinely dynamic and cannot be expressed with Tailwind classes (e.g., a `borderRadius` numeric prop coming from runtime data).
+- Keep `style` minimal and localized to the smallest necessary wrapper.
+- Using `StyleSheet.flatten(...)` is allowed for translating a provided `style` prop into values (e.g., in reusable wrappers).
+
+## What to avoid
+- Avoid `style={{ ... }}` objects for layout/spacing/typography when equivalent Tailwind classes exist.
+- Avoid creating new `StyleSheet.create(...)` blocks for layout that could be done with `className`.
+
+## Examples
+- Bad:
+  - `<View style={{ flex: 1, paddingHorizontal: 16 }} />`
+- Good:
+  - `<View className="flex-1 px-4" />`
+
