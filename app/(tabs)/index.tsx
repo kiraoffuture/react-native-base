@@ -1,26 +1,22 @@
 import { router } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable, View } from "react-native";
-import { Image } from "expo-image";
 import Toast from "react-native-toast-message";
 
 import { Sentry } from "@/bootstrap/sentry";
+import { Image } from "@/components/image";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useAuthStore } from "@/stores/auth.store";
 import { crash, getCrashlytics, log } from "@react-native-firebase/crashlytics";
+
+const LARGE_IMAGE_URL =
+  "https://floatingworld.com/wp-content/uploads/2023/02/Sample-jpg-image-30mb-16.jpg";
 
 export default function HomeScreen() {
   const { clearAuth } = useAuthStore();
   const { t } = useTranslation();
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const id = setTimeout(() => setLoading(false), 5000);
-    return () => clearTimeout(id);
-  }, []);
 
   function onLogout() {
     clearAuth();
@@ -47,51 +43,41 @@ export default function HomeScreen() {
 
   return (
     <ThemedView className="flex-1 items-center justify-center px-5">
-      {loading ? (
-        <View className="w-full max-w-md gap-3">
-          <Skeleton height={180} radius={16} />
-          <Skeleton height={24} radius={12} />
-          <Skeleton height={14} width="75%" />
-          <Skeleton height={14} width="90%" />
-          <Skeleton height={14} width="60%" />
-        </View>
-      ) : (
-        <>
-          <ThemedText type="title">{t("home.title")}</ThemedText>
-          <Image
-            source={{
-              uri: "https://thumbs.dreamstime.com/b/sample-jpeg-fluffy-white-pomeranian-puppy-sits-looks-camera-colorful-balls-front-364720569.jpg?w=992",
-            }}
-            style={{ width: "100%", height: 180, borderRadius: 16, marginTop: 12 }}
-            contentFit="cover"
-            transition={300}
-          />
-          <Pressable
-            className="mt-6 rounded-xl bg-red-500 px-5 py-2.5"
-            onPress={onLogout}
-          >
-            <ThemedText type="defaultSemiBold" className="text-white">
-              {t("home.logout")}
-            </ThemedText>
-          </Pressable>
-          <Pressable
-            className="mt-6 rounded-xl bg-red-500 px-5 py-2.5"
-            onPress={onTestSentry}
-          >
-            <ThemedText type="defaultSemiBold" className="text-white">
-              {t("home.testSentry")}
-            </ThemedText>
-          </Pressable>
-          <Pressable
-            className="mt-6 rounded-xl bg-red-500 px-5 py-2.5"
-            onPress={onTestCrashlytics}
-          >
-            <ThemedText type="defaultSemiBold" className="text-white">
-              {t("home.testCrashlytics")}
-            </ThemedText>
-          </Pressable>
-        </>
-      )}
+      <ThemedText type="title">{t("home.title")}</ThemedText>
+      <View className="mt-3 h-[180px] w-full overflow-hidden rounded-2xl">
+        <Image
+          source={{
+            uri: LARGE_IMAGE_URL,
+          }}
+          contentFit="cover"
+          transition={300}
+          height={180}
+        />
+      </View>
+      <Pressable
+        className="mt-6 rounded-xl bg-red-500 px-5 py-2.5"
+        onPress={onLogout}
+      >
+        <ThemedText type="defaultSemiBold" className="text-white">
+          {t("home.logout")}
+        </ThemedText>
+      </Pressable>
+      <Pressable
+        className="mt-6 rounded-xl bg-red-500 px-5 py-2.5"
+        onPress={onTestSentry}
+      >
+        <ThemedText type="defaultSemiBold" className="text-white">
+          {t("home.testSentry")}
+        </ThemedText>
+      </Pressable>
+      <Pressable
+        className="mt-6 rounded-xl bg-red-500 px-5 py-2.5"
+        onPress={onTestCrashlytics}
+      >
+        <ThemedText type="defaultSemiBold" className="text-white">
+          {t("home.testCrashlytics")}
+        </ThemedText>
+      </Pressable>
     </ThemedView>
   );
 }

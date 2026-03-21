@@ -22,9 +22,7 @@ export default function Index() {
   }, []);
 
   if (!hydrated) {
-    return (
-      <Loading fullScreen />
-    );
+    return <Loading fullScreen />;
   }
 
   if (token) {
